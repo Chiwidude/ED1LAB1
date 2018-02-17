@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Laboratorio1.DBContext;
 using System.IO;
+using Laboratorio1.Models;
 
 namespace Laboratorio1.Controllers
 {
@@ -128,9 +129,11 @@ namespace Laboratorio1.Controllers
                         });
                     }
                 }
+                return RedirectToAction("Index");
             }
             return View();
            
         }
+       
     }
 }
