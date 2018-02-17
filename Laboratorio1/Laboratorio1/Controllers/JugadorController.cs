@@ -4,11 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Laboratorio1.DBContext;
+using System.IO;
 
 namespace Laboratorio1.Controllers
 {
     public class JugadorController : Controller
     {
+        
         public DefaultConnection db = DefaultConnection.getInstance;
 
         // GET: Jugador
@@ -73,6 +75,7 @@ namespace Laboratorio1.Controllers
 
         // POST: Jugador/Delete/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, FormCollection collection)
         {
             try
@@ -85,6 +88,49 @@ namespace Laboratorio1.Controllers
             {
                 return View();
             }
+        }
+        
+         
+        [HttpGet]
+        public ActionResult UploadFile()
+        {
+            return View();
+        }
+        [HttpPost]
+       [ValidateAntiForgeryToken]
+        public ActionResult UploadFile(HttpPostedFileBase File)
+            
+        {
+            string filePath = string.Empty;
+            if (File != null)
+            {
+                string path = Server.MapPath("~/UploadedFiles/");
+                filePath = path + Path.GetFileName(File.FileName);
+                string extension = Path.GetExtension(File.FileName);
+                File.SaveAs(filePath);
+
+                string csvDatos = System.IO.File.ReadAllText(filePath);
+                string[] csvDatos_ = csvDatos.Split('\n');
+                
+                foreach (string fila in csvDatos_)
+                {
+
+                    if (!string.IsNullOrEmpty(fila)&& fila !=csvDatos_[0])
+                    {
+                        db.Jugadores.Add(new Models.Jugador
+                        {
+                            JugadorID = ++db.IdActual,
+                            Club = fila.Split(',')[0],
+                            Apellido = fila.Split(',')[1],
+                            Nombre = fila.Split(',')[2],
+                            Posicion = fila.Split(',')[3],
+                            Salario = (int)Convert.ToDouble(fila.Split(',')[4])
+                        });
+                    }
+                }
+            }
+            return View();
+           
         }
     }
 }
