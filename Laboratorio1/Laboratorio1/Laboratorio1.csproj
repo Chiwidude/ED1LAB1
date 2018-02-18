@@ -201,6 +201,7 @@
     <Content Include="Views\Jugador\Edit.cshtml" />
     <Content Include="Views\Jugador\Delete.cshtml" />
     <Content Include="Views\Jugador\UploadFile.cshtml" />
+    <Content Include="Views\Jugador\DeleteByfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
