@@ -155,6 +155,64 @@ namespace Laboratorio1.Controllers
             return View();
            
         }
-       
+        [HttpGet]
+        public ActionResult DeleteByfile()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public ActionResult DeleteByfile(HttpPostedFileBase File)
+       {
+            List<Jugador> listdelete = new List<Jugador>();
+            string filepath = string.Empty;
+
+            if (File != null)
+            {
+                string path = Server.MapPath("~/Deleting/");
+                filepath = path + Path.GetFileName(File.FileName);
+                string extension = Path.GetExtension(File.FileName);
+                File.SaveAs(filepath);
+                string csvDatos = System.IO.File.ReadAllText(filepath);
+                string[] csvDatos_ = csvDatos.Split('\n');
+
+                foreach (string fila in csvDatos_)
+                {
+
+                    if (!string.IsNullOrEmpty(fila) && fila != csvDatos_[0])
+                    {
+                        listdelete.Add(new Models.Jugador
+                        {
+
+                            Club = fila.Split(',')[0],
+                            Apellido = fila.Split(',')[1],
+                            Nombre = fila.Split(',')[2],
+                            Posicion = fila.Split(',')[3],
+                            Salario = (int)Convert.ToDouble(fila.Split(',')[4])
+                        });
+                    }
+                }
+
+                foreach (Jugador futbolista in listdelete)
+                {
+                    for(int i = 0; i< db.Jugadores.Count; i++)
+                    {
+                        Jugador toDelete = db.Jugadores[i];
+                        if(toDelete.Nombre == futbolista.Nombre && toDelete.Apellido == futbolista.Apellido && toDelete.Club == futbolista.Club)
+                        {
+                            db.Jugadores.Remove(toDelete);
+                        }
+
+                    }
+
+
+                }
+               
+            }
+            return View();
+
+        }
+
     }
 }
