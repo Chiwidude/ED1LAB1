@@ -130,6 +130,7 @@ namespace Laboratorio1.Controllers
                 filePath = path + Path.GetFileName(File.FileName);
                 string extension = Path.GetExtension(File.FileName);
                 File.SaveAs(filePath);
+                ViewBag.Message = "Archivo Cargado";
 
                 string csvDatos = System.IO.File.ReadAllText(filePath);
                 string[] csvDatos_ = csvDatos.Split('\n');
@@ -174,6 +175,7 @@ namespace Laboratorio1.Controllers
                 filepath = path + Path.GetFileName(File.FileName);
                 string extension = Path.GetExtension(File.FileName);
                 File.SaveAs(filepath);
+                ViewBag.Message = "Archivo Cargado";
                 string csvDatos = System.IO.File.ReadAllText(filepath);
                 string[] csvDatos_ = csvDatos.Split('\n');
 
