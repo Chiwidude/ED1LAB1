@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>EBASE DE DATOS MAJOR LEAGUE SOCCER</h1>
+    <p class="lead">JUGADORES MAJOR LEAGUE SOCCER</p>
+    <p>Bienvenido a la Base de Datos de Jugadores de la Major League Soccer</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Ver Jugadores</h2>
+        <p>
+        </p>
+        <p><a class="btn btn-default" @Html.ActionLink("Añadir Manualmente", "Create", "Jugador")</a></p>
+
+    </div>
+    <div class="col-md-4">
+        <h2>Cargar Archivo</h2>
+        <p></p>
+        <p><a class="btn btn-default"  @Html.ActionLink("Cargar Archivo","UploadFile","Jugador")</a></p>
+    </div>
+    
+</div>
