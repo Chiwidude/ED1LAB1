@@ -198,6 +198,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Jugador\Create.cshtml" />
     <Content Include="Views\Jugador\Index.cshtml" />
+    <Content Include="Views\Jugador\Edit.cshtml" />
+    <Content Include="Views\Jugador\Delete.cshtml" />
     <Content Include="Views\Jugador\UploadFile.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -48,48 +48,70 @@ namespace Laboratorio1.Controllers
         }
 
         // GET: Jugador/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Models.Jugador jugador = db.Jugadores.Find(x => x.JugadorID == id);
+            if (jugador == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(jugador);
         }
 
         // POST: Jugador/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "JugadorID, Apellido, Nombre, Club, Posicion, Salario")]Models.Jugador jugador)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
+                Models.Jugador modifiedJugador = db.Jugadores.Find(x => x.JugadorID == jugador.JugadorID);
 
-                return RedirectToAction("Index");
+                if (modifiedJugador == null)
+                {
+                    return HttpNotFound();
+                }
+
+                modifiedJugador.Club = jugador.Club;
+                modifiedJugador.Salario = jugador.Salario;
+                return View(modifiedJugador);
             }
-            catch
-            {
-                return View();
-            }
+
+            return RedirectToAction("Index");
         }
-
+        
         // GET: Jugador/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Models.Jugador jugador = db.Jugadores.Find(x => x.JugadorID == id);
+
+            if (jugador == null)
+            {
+                return HttpNotFound();
+            }
+            return View(jugador);
         }
+        
 
         // POST: Jugador/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            db.Jugadores.Remove(db.Jugadores.Find(x => x.JugadorID == id));
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index");
         }
         [HttpGet]
         public ActionResult UploadFile()
