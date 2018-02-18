@@ -82,27 +82,33 @@ namespace Laboratorio1.Controllers
 
             return RedirectToAction("Index");
         }
-
+        
         // GET: Jugador/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Models.Jugador jugador = db.Jugadores.Find(x => x.JugadorID == id);
+
+            if (jugador == null)
+            {
+                return HttpNotFound();
+            }
+            return View(jugador);
         }
+        
 
         // POST: Jugador/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            db.Jugadores.Remove(db.Jugadores.Find(x => x.JugadorID == id));
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index");
         }
     }
 }
