@@ -7,17 +7,19 @@ using Laboratorio1.DBContext;
 using System.Net;
 using System.IO;
 using Laboratorio1.Models;
+using System.Timers;
+using Laboratorio1.LOG;
 
 namespace Laboratorio1.Controllers
 {
     public class JugadorController : Controller
-    {
-        
+    { 
         public DefaultConnection db = DefaultConnection.getInstance;
 
         // GET: Jugador
         public ActionResult Index()
         {
+            
             return View(db.Jugadores.ToList());
         }
 
@@ -38,12 +40,18 @@ namespace Laboratorio1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include ="Nombre,Apellido,Club,Posicion,Salario")]Models.Jugador jugador)
         {
+            LogFile timing = new LogFile();
+            timing.StartTimer();
+             
             if (ModelState.IsValid)
             {
                 jugador.JugadorID = ++db.IdActual;
                 db.Jugadores.Add(jugador);
+
+                timing.Logcreate("Crear");
                 return RedirectToAction("Index");
             }
+            
             return View(jugador);
         }
 
@@ -58,6 +66,7 @@ namespace Laboratorio1.Controllers
             Models.Jugador jugador = db.Jugadores.Find(x => x.JugadorID == id);
             if (jugador == null)
             {
+                
                 return HttpNotFound();
             }
 
@@ -69,20 +78,24 @@ namespace Laboratorio1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "JugadorID, Apellido, Nombre, Club, Posicion, Salario")]Models.Jugador jugador)
         {
+            LogFile timing = new LogFile();
+            timing.StartTimer();
             if (ModelState.IsValid)
             {
                 Models.Jugador modifiedJugador = db.Jugadores.Find(x => x.JugadorID == jugador.JugadorID);
 
                 if (modifiedJugador == null)
                 {
+                    timing.Logcreate("Editar");
                     return HttpNotFound();
                 }
 
                 modifiedJugador.Club = jugador.Club;
                 modifiedJugador.Salario = jugador.Salario;
+                timing.Logcreate("Editar");
                 return View(modifiedJugador);
             }
-
+            timing.Logcreate("Editar");
             return RedirectToAction("Index");
         }
         
@@ -109,8 +122,10 @@ namespace Laboratorio1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            LogFile timing = new LogFile();
+            timing.StartTimer();
             db.Jugadores.Remove(db.Jugadores.Find(x => x.JugadorID == id));
-
+            timing.Logcreate("Eliminar");
             return RedirectToAction("Index");
         }
         [HttpGet]
@@ -123,6 +138,8 @@ namespace Laboratorio1.Controllers
         public ActionResult UploadFile(HttpPostedFileBase File)
             
         {
+            LogFile timing = new LogFile();
+           
             string filePath = string.Empty;
             if (File != null)
             {
@@ -151,8 +168,13 @@ namespace Laboratorio1.Controllers
                         });
                     }
                 }
+
+
+                timing.Logcreate("Cargar Archivo");
                 return RedirectToAction("Index");
             }
+
+            timing.Logcreate("Cargar Archivo");
             return View();
            
         }
@@ -166,8 +188,10 @@ namespace Laboratorio1.Controllers
 
         public ActionResult DeleteByfile(HttpPostedFileBase File)
        {
-            List<Jugador> listdelete = new List<Jugador>();
-            string filepath = string.Empty;
+            LogFile timing = new LogFile();
+            timing.StartTimer();
+            var listdelete = new List<Jugador>();
+            var filepath = string.Empty;
 
             if (File != null)
             {
@@ -212,9 +236,10 @@ namespace Laboratorio1.Controllers
                 }
                
             }
+            timing.Logcreate("Eliminar por Archivo");
             return View();
 
         }
-
+       
     }
 }
