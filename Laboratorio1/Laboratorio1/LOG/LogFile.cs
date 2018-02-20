@@ -25,13 +25,13 @@ namespace Laboratorio1.LOG
         {
             string date = DateTime.Today.Day.ToString() + "_" + DateTime.Today.DayOfWeek.ToString() +"_" + DateTime.Today.Month.ToString()+"_" + DateTime.Today.Year.ToString();
             string filepath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            filepath = filepath + @"\Log" + date +".txt";
-            FileStream stream = File.Create(filepath);
-            StreamWriter writer = new StreamWriter(stream);
+            filepath = filepath + @"\Log" + "_" + date + ".txt";
+             
+            StreamWriter writer = File.AppendText(filepath);
             time.Stop();
-            writer.WriteLine(action + ":" + " " + time.ElapsedMilliseconds + " " +  "Milisegundos" + " " + DateTime.Now);
+            writer.WriteLine(action + ":" + " " + time.ElapsedMilliseconds + " " +  "Milisegundos" + " " + "["+DateTime.Now +"]");
             writer.Close();
-            stream.Close();
+           
         }
         
     }
